@@ -1,0 +1,435 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BSPI Robotics Club</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Lucide Icons CDN -->
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+    <style>
+        /* কাস্টম ফন্ট - Inter */
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+
+        body {
+            font-family: 'Inter', sans-serif;
+            color: #fff;
+            margin: 0;
+            padding: 0;
+            background: #000;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        /* ভিডিও/GIF ব্যাকগ্রাউন্ড স্টাইল */
+        #background-media { /* ID পরিবর্তন করা হয়েছে */
+            position: fixed;
+            right: 0;
+            bottom: 0;
+            min-width: 100%;
+            min-height: 100%;
+            width: auto;
+            height: auto;
+            z-index: -1;
+            object-fit: cover; /* background-size: cover এর সমতুল্য */
+            filter: blur(3px) brightness(50%); /* গ্লাসমরফিজম প্রভাবের জন্য ব্লার ও ব্রাইটনেস */
+        }
+
+        /* গ্লাসমরফিজম কার্ড স্টাইল */
+        .glassmorphism-card {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 1.5rem; /* rounded-3xl এর সমতুল্য */
+            padding: 2rem;
+            margin: 1rem; /* মোবাইল ভিউ এর জন্য মার্জিন */
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+            transition: transform 0.3s ease-in-out;
+        }
+
+        .glassmorphism-card:hover {
+            transform: translateY(-5px);
+        }
+
+        /* হেডার টাইটেল এর গ্রেডিয়েন্ট টেক্সট */
+        .gradient-text {
+            background-image: linear-gradient(to right, #60a5fa, #a855f7); /* from-blue-400 to-purple-600 এর সমতুল্য */
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            color: transparent; /* ফলব্যাক */
+        }
+
+        /* মোবাইল মেনু ওভারলে */
+        .mobile-menu-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(17, 24, 39, 0.95); /* bg-gray-900 bg-opacity-90 */
+            z-index: 40;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s ease-in-out, visibility 0.3s ease-in-out;
+        }
+
+        .mobile-menu-overlay.open {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .mobile-menu-overlay nav a {
+            font-size: 1.875rem; /* text-3xl */
+            font-weight: 700; /* font-bold */
+            color: #f3f4f6; /* text-gray-100 */
+            transition: color 0.2s;
+        }
+
+        .mobile-menu-overlay nav a:hover {
+            color: #60a5fa; /* hover:text-blue-400 */
+        }
+
+        /* লুসিড আইকনগুলির জন্য বেসিক স্টাইল */
+        .lucide-icon { /* Changed from .lucide to .lucide-icon to avoid conflict with default lucide class */
+            display: inline-block;
+            vertical-align: middle;
+        }
+
+        /* রেসপনসিভনেস */
+        @media (min-width: 768px) {
+            .glassmorphism-card {
+                margin: 2rem; /* ডেস্কটপ ভিউ এর জন্য মার্জিন */
+                padding: 2rem;
+            }
+        }
+    </style>
+</head>
+<body class="relative min-h-screen bg-gray-900 text-gray-100 font-inter">
+
+    <!-- GIF ব্যাকগ্রাউন্ড -->
+    <img id="background-media" src="background.gif" alt="Background GIF" onerror="this.onerror=null;this.src='https://placehold.co/1920x1080/1a202c/ffffff?text=Background+Error';">
+    <!-- যদি ভিডিও ব্যবহার করতে চান, তাহলে উপরের <img> ট্যাগটি কমেন্ট করে নিচের <video> ট্যাগটি ব্যবহার করুন: -->
+    <!--
+    <video autoplay muted loop id="background-media">
+        <source src="background.mp4" type="video/mp4">
+        আপনার ব্রাউজার ভিডিও ট্যাগ সমর্থন করে না।
+    </video>
+    -->
+
+    <!-- কন্টেন্ট লেয়ার -->
+    <div class="relative z-10 flex flex-col items-center py-8">
+        <!-- Header -->
+        <header id="main-header" class="w-full max-w-6xl mx-auto py-4 px-4 md:px-8 transition-all duration-300">
+            <div class="flex justify-between items-center">
+                <div class="flex items-center space-x-3 md:space-x-4"> <!-- বামপাশের আইটেমগুলির জন্য ফ্লেক্স কন্টেইনার -->
+                    <!-- Logo -->
+                    <img
+                        id="club-logo"
+                        src="bspirc logo.png"
+                        alt="Club Logo"
+                        class="h-16 w-16 md:h-20 md:w-20 rounded-full object-cover transition-all duration-300"
+                        onerror="this.onerror=null;this.src='https://placehold.co/60x60/cccccc/000000?text=Logo+Error';"
+                    />
+                    <h1 class="text-3xl md:text-5xl font-extrabold tracking-wide gradient-text">
+                        BSPI Robotics Club
+                    </h1>
+                </div>
+                <div class="flex items-center space-x-4"> <!-- ডানপাশের আইটেমগুলির জন্য ফ্লেক্স কন্টেইনার -->
+                    <!-- Desktop Navigation -->
+                    <nav class="hidden md:flex space-x-8">
+                        <a href="#introduction" class="text-lg font-medium text-gray-200 hover:text-blue-400 transition-colors duration-200">Introduction</a>
+                        <a href="#objectives" class="text-lg font-medium text-gray-200 hover:text-blue-400 transition-colors duration-200">Objectives</a>
+                        <a href="#committee" class="text-lg font-medium text-gray-200 hover:text-blue-400 transition-colors duration-200">Committee</a>
+                        <a href="#activities" class="text-lg font-medium text-gray-200 hover:text-blue-400 transition-colors duration-200">Activities</a>
+                        <a href="#contact" class="text-lg font-medium text-gray-200 hover:text-blue-400 transition-colors duration-200">Contact</a>
+                    </nav>
+                    <!-- Hamburger Menu Icon for mobile -->
+                    <div class="md:hidden">
+                        <button id="hamburger-button" class="text-gray-100 hover:text-blue-400 focus:outline-none">
+                            <i data-lucide="bot" class="lucide-icon" data-lucide-size="32"></i> <!-- রোবট আইকন -->
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <p class="text-lg md:text-xl italic font-light text-gray-200 mt-2 text-center md:text-left">"Together We Build. Beyond Limits."</p>
+        </header>
+
+        <!-- Mobile Menu Overlay -->
+        <div id="mobile-menu-overlay" class="mobile-menu-overlay">
+            <button id="close-menu-button" class="absolute top-8 right-8 text-gray-100 hover:text-blue-400 focus:outline-none">
+                <i data-lucide="x" class="lucide-icon" data-lucide-size="40"></i>
+            </button>
+            <nav class="flex flex-col space-y-6 text-center">
+                <a href="#introduction" class="text-3xl font-bold text-gray-100 hover:text-blue-400 transition-colors duration-200">Introduction</a>
+                <a href="#objectives" class="text-3xl font-bold text-gray-100 hover:text-blue-400 transition-colors duration-200">Objectives</a>
+                <a href="#committee" class="text-3xl font-bold text-gray-100 hover:text-blue-400 transition-colors duration-200">Committee</a>
+                <a href="#activities" class="text-3xl font-bold text-gray-100 hover:text-blue-400 transition-colors duration-200">Activities</a>
+                <a href="#contact" class="text-3xl font-bold text-gray-100 hover:text-blue-400 transition-colors duration-200">Contact</a>
+            </nav>
+        </div>
+
+        <main class="w-full max-w-6xl mx-auto mt-8 md:mt-12 space-y-8 px-4">
+            <!-- Introduction Section -->
+            <section id="introduction">
+                <div class="glassmorphism-card">
+                    <h2 class="text-3xl md:text-4xl font-bold mb-4 flex items-center gap-2">
+                        <i data-lucide="home" class="lucide-icon" data-lucide-size="32" style="color:#93c5fd;"></i> Introduction
+                    </h2>
+                    <p class="text-base md:text-lg leading-relaxed text-gray-200">
+                        Founded on February 26, 2025, the BSPI Robotics Club has rapidly evolved into a premier platform for innovation, collaboration, and hands-on technological learning. The club is dedicated to fostering creativity, enhancing technical skills, and empowering students to transform academic knowledge into real-world applications. Through its activities, the club strives to build a culture of teamwork, leadership, and forward-thinking innovation, positioning itself as a hub for future technologists and changemakers.
+                    </p>
+                </div>
+            </section>
+
+            <!-- Objectives Section -->
+            <section id="objectives">
+                <div class="glassmorphism-card">
+                    <h2 class="text-3xl md:text-4xl font-bold mb-6 flex items-center gap-2">
+                        <i data-lucide="target" class="lucide-icon" data-lucide-size="32" style="color:#86efad;"></i> Objectives
+                    </h2>
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                        <!-- Objective 1 -->
+                        <div class="bg-white bg-opacity-5 p-5 rounded-xl border border-white border-opacity-10 shadow-md transform hover:scale-105 transition-transform duration-200">
+                            <div class="flex items-center mb-3">
+                                <i data-lucide="book" class="lucide-icon" data-lucide-size="24" style="color:#60a5fa;"></i>
+                                <h3 class="text-xl font-semibold ml-3 text-gray-50">Enhancing Practical Learning</h3>
+                            </div>
+                            <p class="text-gray-200 text-sm">Engage students in hands-on projects, robotics workshops, and competitions to bridge the gap between academic knowledge and real-world problem-solving.</p>
+                        </div>
+                        <!-- Objective 2 -->
+                        <div class="bg-white bg-opacity-5 p-5 rounded-xl border border-white border-opacity-10 shadow-md transform hover:scale-105 transition-transform duration-200">
+                            <div class="flex items-center mb-3">
+                                <i data-lucide="share-2" class="lucide-icon" data-lucide-size="24" style="color:#4ade80;"></i>
+                                <h3 class="text-xl font-semibold ml-3 text-gray-50">Enabling Resource Sharing</h3>
+                            </div>
+                            <p class="text-gray-200 text-sm">Facilitate the exchange of technical expertise, mentorship, tools, components, and learning materials, enriching the overall member experience.</p>
+                        </div>
+                        <!-- Objective 3 -->
+                        <div class="bg-white bg-opacity-5 p-5 rounded-xl border border-white border-opacity-10 shadow-md transform hover:scale-105 transition-transform duration-200">
+                            <div class="flex items-center mb-3">
+                                <i data-lucide="lightbulb" class="lucide-icon" data-lucide-size="24" style="color:#facc15;"></i>
+                                <h3 class="text-xl font-semibold ml-3 text-gray-50">Encouraging Joint Events</h3>
+                            </div>
+                            <p class="text-gray-200 text-sm">Organize co-branded competitions, webinars, seminars, and innovation challenges to broaden outreach and maximize impact.</p>
+                        </div>
+                        <!-- Objective 4 -->
+                        <div class="bg-white bg-opacity-5 p-5 rounded-xl border border-white border-opacity-10 shadow-md transform hover:scale-105 transition-transform duration-200">
+                            <div class="flex items-center mb-3">
+                                <i data-lucide="target" class="lucide-icon" data-lucide-size="24" style="color:#f87171;"></i>
+                                <h3 class="text-xl font-semibold ml-3 text-gray-50">Supporting Innovation & Research</h3>
+                            </div>
+                            <p class="text-gray-200 text-sm">Collaborate on large-scale hardware and software projects, share development responsibilities, and encourage co-publishing of research and innovations.</p>
+                        </div>
+                        <!-- Objective 5 -->
+                        <div class="bg-white bg-opacity-5 p-5 rounded-xl border border-white border-opacity-10 shadow-md transform hover:scale-105 transition-transform duration-200">
+                            <div class="flex items-center mb-3">
+                                <i data-lucide="users" class="lucide-icon" data-lucide-size="24" style="color:#a78bfa;"></i>
+                                <h3 class="text-xl font-semibold ml-3 text-gray-50">Promoting Networking & Leadership</h3>
+                            </div>
+                            <p class="text-gray-200 text-sm">Establish a strong inter-club network that connects students, encourages idea exchange, and develops future leaders in the technology industry.</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Executive Committee Section -->
+            <section id="committee">
+                <div class="glassmorphism-card">
+                    <h2 class="text-3xl md:text-4xl font-bold mb-6 flex items-center gap-2">
+                        <i data-lucide="users" class="lucide-icon" data-lucide-size="32" style="color:#fcd34d;"></i> Executive Committee
+                    </h2>
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                        <div class="bg-white bg-opacity-5 p-5 rounded-xl border border-white border-opacity-10 shadow-md flex items-center space-x-4">
+                            <img src="sahel.jpg" alt="Sanbin Shawkat Sahel" class="w-16 h-16 rounded-full object-cover border-2 border-blue-400" onerror="this.onerror=null;this.src='https://placehold.co/100x100/000000/FFFFFF?text=Photo';"/>
+                            <div>
+                                <h3 class="text-xl font-semibold text-gray-50">Sanbin Shawkat Sahel</h3>
+                                <p class="text-gray-200 text-sm">TEAM IT</p>
+                            </div>
+                        </div>
+                        <div class="bg-white bg-opacity-5 p-5 rounded-xl border border-white border-opacity-10 shadow-md flex items-center space-x-4">
+                            <img src="https://placehold.co/100x100/000000/FFFFFF?text=Photo 2" alt="Name 2" class="w-16 h-16 rounded-full object-cover border-2 border-blue-400" onerror="this.onerror=null;this.src='https://placehold.co/100x100/000000/FFFFFF?text=Photo';"/>
+                            <div>
+                                <h3 class="text-xl font-semibold text-gray-50">Name 2</h3>
+                                <p class="text-gray-200 text-sm">Group B</p>
+                            </div>
+                        </div>
+                        <div class="bg-white bg-opacity-5 p-5 rounded-xl border border-white border-opacity-10 shadow-md flex items-center space-x-4">
+                            <img src="https://placehold.co/100x100/000000/FFFFFF?text=Photo 3" alt="Name 3" class="w-16 h-16 rounded-full object-cover border-2 border-blue-400" onerror="this.onerror=null;this.src='https://placehold.co/100x100/000000/FFFFFF?text=Photo';"/>
+                            <div>
+                                <h3 class="text-xl font-semibold text-gray-50">Name 3</h3>
+                                <p class="text-gray-200 text-sm">Group C</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Recent Activities Section -->
+            <section id="activities">
+                <div class="glassmorphism-card">
+                    <h2 class="text-3xl md:text-4xl font-bold mb-6 flex items-center gap-2">
+                        <i data-lucide="book" class="lucide-icon" data-lucide-size="32" style="color:#5eead4;"></i> Recent Activities
+                    </h2>
+                    <div class="space-y-4">
+                        <div class="bg-white bg-opacity-5 p-4 rounded-xl border border-white border-opacity-10 shadow-md">
+                            <h3 class="text-xl font-semibold text-gray-50">Robotics Workshop 2025</h3>
+                            <p class="text-gray-300 text-sm">August 10, 2025</p>
+                            <p class="text-gray-200 mt-2">Hands-on workshop for beginners in robotics and AI.</p>
+                        </div>
+                        <div class="bg-white bg-opacity-5 p-4 rounded-xl border border-white border-opacity-10 shadow-md">
+                            <h3 class="text-xl font-semibold text-gray-50">Inter-Club Robotics Competition</h3>
+                            <p class="text-gray-300 text-sm">July 22, 2025</p>
+                            <p class="text-gray-200 mt-2">Successful participation in the regional competition, securing top positions.</p>
+                        </div>
+                        <div class="bg-white bg-opacity-5 p-4 rounded-xl border border-white border-opacity-10 shadow-md">
+                            <h3 class="text-xl font-semibold text-gray-50">AI in Everyday Life Seminar</h3>
+                            <p class="text-gray-300 text-sm">June 15, 2025</p>
+                            <p class="text-gray-200 mt-2">An insightful seminar on the impact of AI on daily activities.</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Contact Section -->
+            <section id="contact">
+                <div class="glassmorphism-card">
+                    <h2 class="text-3xl md:text-4xl font-bold mb-4 flex items-center gap-2">
+                        <i data-lucide="mail" class="lucide-icon" data-lucide-size="32" style="color:#c084fc;"></i> Contact
+                    </h2>
+                    <div class="flex items-center text-lg mb-2">
+                        <i data-lucide="mail" class="lucide-icon mr-3" style="color:#60a5fa;"></i>
+                        <a href="mailto:bspiroboticsclub@gmail.com" class="text-blue-300 hover:underline">
+                            bspiroboticsclub@gmail.com
+                        </a>
+                    </div>
+                    <div class="flex items-center text-lg mb-4">
+                        <i data-lucide="map-pin" class="lucide-icon mr-3" style="color:#f87171;"></i>
+                        <p class="text-gray-200">Kaptai, Rangamati, Chittagong</p>
+                    </div>
+                    <!-- Google Maps Embed -->
+                    <div class="mt-6 rounded-xl overflow-hidden border border-white border-opacity-20 shadow-lg">
+                        <iframe
+                            src="https://maps.google.com/maps?q=22.50628296991304, 92.21152961390887&z=15&output=embed"
+                            width="100%"
+                            height="400"
+                            style="border:0;"
+                            allowfullscreen=""
+                            loading="lazy"
+                            referrerpolicy="no-referrer-when-downgrade"
+                            title="BSPI Robotics Club Location"
+                        ></iframe>
+                    </div>
+                </div>
+            </section>
+        </main>
+
+        <!-- Footer -->
+        <footer class="w-full text-center py-6 mt-12 bg-white bg-opacity-5 backdrop-blur-md border-t border-white border-opacity-10 flex flex-col items-center">
+            <div class="flex space-x-6 mb-4">
+                <a href="https://www.facebook.com/bspirc" target="_blank" rel="noopener noreferrer" class="text-gray-300 hover:text-blue-500 transition-colors duration-200">
+                    <i data-lucide="facebook" class="lucide-icon" data-lucide-size="32"></i>
+                </a>
+                <a href="https://youtube.com/bspiroboticsclub" target="_blank" rel="noopener noreferrer" class="text-gray-300 hover:text-red-500 transition-colors duration-200">
+                    <i data-lucide="youtube" class="lucide-icon" data-lucide-size="32"></i>
+                </a>
+                <a href="https://linkedin.com/company/bspiroboticsclub" target="_blank" rel="noopener noreferrer" class="text-gray-300 hover:text-blue-700 transition-colors duration-200">
+                    <i data-lucide="linkedin" class="lucide-icon" data-lucide-size="32"></i>
+                </a>
+            </div>
+            <p class="text-gray-300 text-sm">&copy; 2025 BSPI Robotics Club. All rights reserved.</p>
+        </footer>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // Lucide Icons ইনিশিয়ালাইজ করুন
+            lucide.createIcons();
+
+            const hamburgerButton = document.getElementById('hamburger-button');
+            const mobileMenuOverlay = document.getElementById('mobile-menu-overlay');
+            const closeMenuButton = document.getElementById('close-menu-button');
+            const header = document.getElementById('main-header');
+            const mobileMenuItems = mobileMenuOverlay.querySelectorAll('nav a');
+            const clubLogo = document.getElementById('club-logo'); // লোগো এলিমেন্ট
+
+            // হ্যামবার্গার মেনু টগল
+            hamburgerButton.addEventListener('click', () => {
+                mobileMenuOverlay.classList.toggle('open');
+            });
+
+            // মেনু বন্ধ করুন
+            closeMenuButton.addEventListener('click', () => {
+                mobileMenuOverlay.classList.remove('open');
+            });
+
+            // মোবাইল মেনু আইটেমে ক্লিক করলে মেনু বন্ধ করুন এবং স্ক্রল করুন
+            mobileMenuItems.forEach(item => {
+                item.addEventListener('click', () => {
+                    mobileMenuOverlay.classList.remove('open');
+                    // smooth scroll
+                    const targetId = item.getAttribute('href').substring(1);
+                    const targetElement = document.getElementById(targetId);
+                    if (targetElement) {
+                        targetElement.scrollIntoView({ behavior: 'smooth' });
+                    }
+                });
+            });
+
+            // স্ক্রল ইভেন্ট হ্যান্ডেলিং - হেডার স্টিকি, স্টাইল পরিবর্তন এবং লোগো আকার পরিবর্তন
+            window.addEventListener('scroll', () => {
+                if (window.scrollY > 50) {
+                    // হেডার স্টাইল পরিবর্তন
+                    header.classList.add('fixed', 'top-0', 'bg-white', 'bg-opacity-10', 'backdrop-blur-lg', 'rounded-b-3xl', 'shadow-xl', 'z-20');
+                    header.classList.remove('py-4');
+                    header.classList.add('py-2');
+
+                    // লোগো ছোট করুন
+                    clubLogo.classList.remove('h-16', 'w-16', 'md:h-20', 'md:w-20'); // বড় আকার সরান
+                    clubLogo.classList.add('h-10', 'w-10', 'md:h-12', 'md:w-12');   // ছোট আকার যোগ করুন
+                } else {
+                    // হেডার স্টাইল স্বাভাবিক করুন
+                    header.classList.remove('fixed', 'top-0', 'bg-white', 'bg-opacity-10', 'backdrop-blur-lg', 'rounded-b-3xl', 'shadow-xl', 'z-20');
+                    header.classList.remove('py-2');
+                    header.classList.add('py-4');
+
+                    // লোগো বড় করুন
+                    clubLogo.classList.remove('h-10', 'w-10', 'md:h-12', 'md:w-12'); // ছোট আকার সরান
+                    clubLogo.classList.add('h-16', 'w-16', 'md:h-20', 'md:w-20');   // বড় আকার যোগ করুন
+                }
+            });
+
+            // GIF/ভিডিও লোড হলে একটি fallback টেক্সট দেখানোর জন্য ত্রুটি হ্যান্ডলিং
+            const backgroundMedia = document.getElementById('background-media');
+            if (backgroundMedia) {
+                backgroundMedia.onerror = function() {
+                    console.error("ব্যাকগ্রাউন্ড মিডিয়া লোড হতে ব্যর্থ হয়েছে। ফলব্যাক ইমেজ দেখানো হচ্ছে।");
+                    // এখানে আপনি চাইলে একটি ফলব্যাক ইমেজ বা কালার সেট করতে পারেন।
+                    backgroundMedia.src = "https://placehold.co/1920x1080/1a202c/ffffff?text=Background+Error";
+                };
+            }
+
+            // সকল নেভিগেশন লিংক স্মুথ স্ক্রল করার জন্য
+            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+                anchor.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    // মোবাইল মেনু খোলা থাকলে বন্ধ করুন
+                    if (mobileMenuOverlay.classList.contains('open')) {
+                        mobileMenuOverlay.classList.remove('open');
+                    }
+                    const targetId = this.getAttribute('href').substring(1);
+                    const targetElement = document.getElementById(targetId);
+                    if (targetElement) {
+                        targetElement.scrollIntoView({ behavior: 'smooth' });
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>
